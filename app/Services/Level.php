@@ -2,16 +2,11 @@
 
 namespace App\Services;
 
-use Entities\Consistency;
-use Entities\Entity;
+use DevMakerLab\Entity;
 
 class Level extends Entity
 {
-    use Consistency;
-
-    public $range;
-
-    public $speed;
-
-    public $name;
+    public int $range;
+    public int $speed;
+    public string $name;
 }
