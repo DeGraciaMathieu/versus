@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\Team;
-use App\Models\Match;
+use App\Models\Game;
 use App\Models\Ladder;
 use App\Services\EloService;
 use App\Services\LevelService;
@@ -31,7 +31,7 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($proTeam);
 
-        $match = Match::create([
+        $match = Game::create([
             'processed_at' => now(),
         ]);
 
@@ -40,7 +40,7 @@ class EloServiceTest extends TestCase
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->calculateAfterMatch($match);
+        $eloService->resolveByGame($match);
 
         $this->assertDatabaseHas('teams', [
             'id' => $noobTeam->id,
@@ -70,7 +70,7 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($proTeam);
 
-        $match = Match::create([
+        $match = Game::create([
             'processed_at' => now(),
         ]);
 
@@ -79,7 +79,7 @@ class EloServiceTest extends TestCase
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->calculateAfterMatch($match);
+        $eloService->resolveByGame($match);
 
         $this->assertDatabaseHas('teams', [
             'id' => $noobTeam->id,
@@ -107,7 +107,7 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($proTeam);
 
-        $match = Match::create([
+        $match = Game::create([
             'processed_at' => now(),
         ]);
 
@@ -116,7 +116,7 @@ class EloServiceTest extends TestCase
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->calculateAfterMatch($match);
+        $eloService->resolveByGame($match);
 
         $this->assertDatabaseHas('teams', [
             'id' => $newChallenger->id,
@@ -146,7 +146,7 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($secondTeam);
 
-        $match = Match::create([
+        $match = Game::create([
             'processed_at' => now(),
         ]);
 
@@ -155,7 +155,7 @@ class EloServiceTest extends TestCase
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->calculateAfterMatch($match);
+        $eloService->resolveByGame($match);
 
         $this->assertDatabaseHas('teams', [
             'id' => $firstTeam->id,

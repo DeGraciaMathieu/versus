@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Team;
 use App\Models\User;
-use App\Models\Match;
+use App\Models\Game;
 use App\Models\Ladder;
 use App\Services\EloService;
 use App\Services\LevelService;
@@ -177,7 +177,7 @@ class AjaxLadderControllerTest extends TestCase
         $ladder->teams()->save($proTeam);
         $member->teams()->save($proTeam);
 
-        $match = Match::create([
+        $match = Game::create([
             'processed_at' => now(),
         ]);
 
@@ -186,7 +186,7 @@ class AjaxLadderControllerTest extends TestCase
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->calculateAfterMatch($match);
+        $eloService->resolveByGame($match);
 
         return [$proTeam, $noobTeam];
     }
