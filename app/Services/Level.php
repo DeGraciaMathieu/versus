@@ -6,7 +6,7 @@ use DevMakerLab\Entity;
 
 class Level extends Entity
 {
-    public int $range;
+    public array $range;
     public int $speed;
     public string $name;
 }
