@@ -12,7 +12,7 @@
         <link href="https://fonts.googleapis.com/css?family=Carter+One:400,600,700" rel="stylesheet">
 
         <!-- Styles -->
-        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body class="font-sans antialiased">
         <div id="app">
@@ -31,6 +31,6 @@
                 </main>
             </div>
         </div>
-        <script src="{{ mix('js/app.js') }}"></script>
+        <script src="{{ asset('js/app.js') }}" defer></script>
     </body>
 </html>
