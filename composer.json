@@ -14,7 +14,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
-        "thephplab/entities": "^1.8",
+        "devmakerlab/entities": "^3.0",
         "laravel-frontend-presets/tailwindcss": "^4.3"
     },
     "require-dev": {
