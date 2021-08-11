@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Team;
 use App\Models\User;
-use App\Models\Match;
+use App\Models\Game;
 use App\Models\Ladder;
 use App\Services\EloService;
 use Illuminate\Database\Seeder;
@@ -31,17 +31,17 @@ class DatabaseSeeder extends Seeder
                 $opponents = $teams->where('id', '!=', $team->id)->random(5);
 
                 $opponents->each(function ($opponent) use ($team) {
-                    $match = Match::create([
+                    $game = Game::create([
                         'processed_at' => now(),
                     ]);
 
                     $teamScore = 11;
                     $opponentScore = rand(0, 9);
 
-                    $match->teams()->save($team, ['score' => $teamScore]);
-                    $match->teams()->save($opponent, ['score' => $opponentScore]);
+                    $game->teams()->save($team, ['score' => $teamScore]);
+                    $game->teams()->save($opponent, ['score' => $opponentScore]);
 
-                    $this->container->get(EloService::class)->calculateAfterMatch($match);
+                    $this->container->get(EloService::class)->resolveByGame($game);
                 });
             });
         }

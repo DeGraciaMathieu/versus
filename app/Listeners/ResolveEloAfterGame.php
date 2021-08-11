@@ -2,10 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\MatchAdded;
+use App\Events\GamePlayed;
 use App\Services\EloService;
 
-class CalculateEloAfterMatch
+class ResolveEloAfterGame
 {
     protected EloService $eloService;
 
@@ -14,8 +14,8 @@ class CalculateEloAfterMatch
         $this->eloService = $eloService;
     }
 
-    public function handle(MatchAdded $event): void
+    public function handle(GamePlayed $event): void
     {
-        $this->eloService->calculateAfterMatch($event->match);
+        $this->eloService->resolveByGame($event->game);
     }
 }
