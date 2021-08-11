@@ -7,7 +7,7 @@ use App\Models\Team;
 use App\Models\Ladder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AjaxGameControllerTest extends TestCase
+class GameControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -20,7 +20,7 @@ class AjaxGameControllerTest extends TestCase
             $teams = Team::factory()->count(2)->make()
         );
 
-        $response = $this->post('/ajax/ladders/' . $ladder->id . '/games', [
+        $response = $this->from('/ladders/' . $ladder->id . '/games/create')->post('/ladders/' . $ladder->id . '/games', [
             'home_id' => $teams->first()->id,
             'away_id' => $teams->last()->id,
             'home_score' => 3,
@@ -39,6 +39,6 @@ class AjaxGameControllerTest extends TestCase
             'won' => false,
         ]);
 
-        $response->assertSuccessful();
+        $response->assertRedirect('/ladders/' . $ladder->id . '/games/create');
     }
 }
