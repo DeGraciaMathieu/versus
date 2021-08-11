@@ -28,5 +28,5 @@ Route::group(['prefix' => 'ajax'], function () {
     });
 
     Route::get('ladders/{ladder}/teams', [App\Http\Controllers\Ajax\TeamController::class, 'index'])->name('ajax.team.index');
-    Route::post('ladders/{ladder}/matches', [App\Http\Controllers\Ajax\MatchController::class, 'store'])->name('ajax.match.store');
+    Route::post('ladders/{ladder}/games', [App\Http\Controllers\Ajax\GameController::class, 'store'])->name('ajax.game.store');
 });
