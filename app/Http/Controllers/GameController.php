@@ -13,7 +13,7 @@ class GameController extends Controller
 {
     public function create(Ladder $ladder)
     {
-        abort(500);
+        abort(404);
     }
 
     public function store(StoreGame $request, Ladder $ladder): RedirectResponse
@@ -25,12 +25,11 @@ class GameController extends Controller
             'processed_at' => now(),
         ]);
 
-
         $game->teams()->save($firstTeam, ['score' => $request->get('home_score')]);
         $game->teams()->save($secondTeam, ['score' => $request->get('away_score')]);
 
         event(new GamePlayed($game));
 
-        return redirect()->back();
+        return redirect()->route('ladder.ranking', $ladder);
     }
 }
