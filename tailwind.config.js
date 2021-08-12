@@ -4,11 +4,13 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Lato', ...defaultTheme.fontFamily.sans],
-                title: ['Carter One'],
+                sans: ['Noto Sans', ...defaultTheme.fontFamily.sans],
+                title: ['Bangers'],
             },
             colors: {
-                'yellow-star': '#fabc3b',
+                'prussian-blue': '#082032',
+                'charcoal': '#334756',
+                'portland-orange': '#FF4C29',
             }
         }
     }
