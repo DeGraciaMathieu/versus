@@ -16,12 +16,17 @@ class TeamRegistred
      */
     public function handle(Request $request, Closure $next)
     {
-        $ladder = $request->ladder;
-        // todo: vérifier qu'aucune team de user n'est inscrite dans ladder
+        if ($this->userMissingRegistredTeam($request)) {
+            return redirect()->route('team.create', $request->ladder);
+        }
 
-        $userTeams = $request->user()->teams();
-
-        dd($userTeams);
         return $next($request);
+    }
+
+    private function userMissingRegistredTeam(Request $request): bool
+    {
+        $ladderTeams = $request->ladder->teams()->select('id')->pluck('id')->toArray();
+
+        return ! $request->user()->teams()->whereIn('teams.id', $ladderTeams)->exists();
     }
 }

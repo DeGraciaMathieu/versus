@@ -11,6 +11,11 @@ use Illuminate\Http\RedirectResponse;
 
 class GameController extends Controller
 {
+    public function create(Ladder $ladder)
+    {
+        abort(500);
+    }
+
     public function store(StoreGame $request, Ladder $ladder): RedirectResponse
     {
         $firstTeam = $ladder->teams->where('id', '=', $request->get('home_id'))->first();

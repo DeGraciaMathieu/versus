@@ -19,6 +19,7 @@ class TeamController extends Controller
         $team = Team::make($request->only('name'));
 
         $ladder->teams()->save($team);
+        $request->user()->teams()->attach($team);
 
         return redirect()->route('ladder.ranking', $ladder);
     }

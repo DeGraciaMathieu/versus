@@ -5,7 +5,7 @@
         {{ $ladder->name }}
     </div>
     <div class="max-w-sm mx-auto mb-4 flex">
-        <a href="#" class="text-center w-full text-white text-shadow uppercase bg-yellow-star font-bold py-1 border-b-4 border-yellow-600 sm:hover:shadow-lg">
+        <a href="{{ route('game.create', $ladder) }}" class="text-center w-full text-white text-shadow uppercase bg-yellow-star font-bold py-1 border-b-4 border-yellow-600 sm:hover:shadow-lg">
             Fight !
         </a>
     </div>
