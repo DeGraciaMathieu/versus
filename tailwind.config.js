@@ -11,9 +11,5 @@ module.exports = {
                 'yellow-star': '#fabc3b',
             }
         }
-    },
-    variants: {},
-    plugins: [
-        require('@tailwindcss/custom-forms')
-    ]
+    }
 }
