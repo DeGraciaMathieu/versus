@@ -7,12 +7,12 @@ use App\Models\Team;
 use App\Models\Ladder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AjaxMatchControllerTest extends TestCase
+class GameControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function can_store_match()
+    public function can_store_game()
     {
         $ladder = Ladder::factory()->create();
 
@@ -20,25 +20,25 @@ class AjaxMatchControllerTest extends TestCase
             $teams = Team::factory()->count(2)->make()
         );
 
-        $response = $this->post('/ajax/ladders/' . $ladder->id . '/matches', [
+        $response = $this->from('/ladders/' . $ladder->id . '/games/create')->post('/ladders/' . $ladder->id . '/games', [
             'home_id' => $teams->first()->id,
             'away_id' => $teams->last()->id,
             'home_score' => 3,
             'away_score' => 0,
         ]);
 
-        $this->assertDatabaseCount('matches', 1);
-        $this->assertDatabaseHas('match_team', [
+        $this->assertDatabaseCount('games', 1);
+        $this->assertDatabaseHas('game_team', [
             'team_id' => $teams->first()->id,
             'score' => 3,
             'won' => true,
         ]);
-        $this->assertDatabaseHas('match_team', [
+        $this->assertDatabaseHas('game_team', [
             'team_id' => $teams->last()->id,
             'score' => 0,
             'won' => false,
         ]);
 
-        $response->assertSuccessful();
+        $response->assertRedirect('/ladders/' . $ladder->id . '/games/create');
     }
 }

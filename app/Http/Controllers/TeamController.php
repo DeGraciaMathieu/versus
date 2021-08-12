@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers;
 
 use App\Models\Team;
 use App\Models\Ladder;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
 class TeamController extends Controller

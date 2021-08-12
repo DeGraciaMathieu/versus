@@ -5,55 +5,51 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Team;
 use App\Models\User;
-use App\Models\Match;
+use App\Models\Game;
 use App\Models\Ladder;
 use App\Services\EloService;
 use App\Services\LevelService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AjaxLadderControllerTest extends TestCase
+class LadderControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function can_have_ladders()
+    public function guest_can_view_ladders()
     {
         $expectedLadders = Ladder::factory()->count(2)->create();
 
-        $response = $this->get('/ajax/ladders');
+        $response = $this->get('/');
 
         $response->assertSuccessful();
-
-        $response->assertJsonCount(2);
-        $response->assertJsonFragment(['name' => $expectedLadders[0]->name]);
-        $response->assertJsonFragment(['name' => $expectedLadders[1]->name]);
+        $this->assertCount(2, $response['ladders']);
+        $this->assertEquals($expectedLadders[0]->name, $response['ladders'][0]->name);
+        $this->assertEquals($expectedLadders[1]->name, $response['ladders'][1]->name);
     }
 
     /** @test */
-    public function can_have_ranking_by_ladder()
+    public function member_can_view_ranking()
     {
         $ladder = Ladder::factory()->create();
         $member = User::factory()->create();
 
-        $teams = $this->makeSomeMatchesForLadderAndMember($ladder, $member);
+        $teams = $this->makeSomeGamesForLadderAndMember($ladder, $member);
 
-        $response = $this->actingAs($member)->get('/ajax/ladders/' . $ladder->id . '/ranking');
+        $response = $this->actingAs($member)->get('/ladders/' . $ladder->id . '/ranking');
 
         $response->assertSuccessful();
+        $this->assertEquals($ladder->name, $response['ladder']->name);
 
-        $response->assertJsonCount(2);
+        $this->assertCount(2, $response['teams']);
 
-        $response->assertJsonFragment([
-            'name' => $teams[0]->name,
-            'rank' => 1,
-            'current' => true,
-        ]);
+        $this->assertEquals($teams[0]->name, $response['teams'][0]->name);
+        $this->assertEquals(1, $response['teams'][0]->rank);
+        $this->assertTrue($response['teams'][0]->current);
 
-        $response->assertJsonFragment([
-            'name' => $teams[1]->name,
-            'rank' => 2,
-            'current' => false,
-        ]);
+        $this->assertEquals($teams[1]->name, $response['teams'][1]->name);
+        $this->assertEquals(2, $response['teams'][1]->rank);
+        $this->assertFalse($response['teams'][1]->current);
     }
 
     /** @test */
@@ -63,16 +59,12 @@ class AjaxLadderControllerTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $response = $this->actingAs($admin)->post('/ajax/ladders', [
+        $response = $this->actingAs($admin)->post('/ladders', [
             'name' => $name = '100v100 King',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
         ]);
 
-        $response->assertSuccessful();
-
-        $response->assertJsonFragment([
-            'name' => $name,
-        ]);
+        $response->assertRedirect('/');
 
         $this->assertDatabaseHas('ladders', [
             'name' => $name,
@@ -86,7 +78,7 @@ class AjaxLadderControllerTest extends TestCase
             'role' => 'member',
         ]);
 
-        $response = $this->actingAs($member)->post('/ajax/ladders', [
+        $response = $this->actingAs($member)->post('/ladders', [
             'name' => 'Not yet bro',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
         ]);
@@ -97,7 +89,7 @@ class AjaxLadderControllerTest extends TestCase
     /** @test */
     public function guest_cant_create_ladder()
     {
-        $response = $this->post('/ajax/ladders', [
+        $response = $this->post('/ladders', [
             'name' => 'Not yet bro too',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
         ]);
@@ -117,16 +109,12 @@ class AjaxLadderControllerTest extends TestCase
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
         ]);
 
-        $response = $this->actingAs($admin)->put('/ajax/ladders/' . $ladder->id, [
+        $response = $this->actingAs($admin)->put('/ladders/' . $ladder->id, [
             'name' => $name = 'New age !',
             'description' => "Everyday I'm Shuffling ...",
         ]);
 
-        $response->assertSuccessful();
-
-        $response->assertJsonFragment([
-            'name' => $name,
-        ]);
+        $response->assertRedirect('/');
 
         $this->assertDatabaseHas('ladders', [
             'id' => $ladder->id,
@@ -143,7 +131,7 @@ class AjaxLadderControllerTest extends TestCase
 
         $ladder = Ladder::factory()->create();
 
-        $response = $this->actingAs($member)->put('/ajax/ladders/' . $ladder->id, [
+        $response = $this->actingAs($member)->put('/ladders/' . $ladder->id, [
             'name' => 'Not yet bro',
         ]);
 
@@ -155,14 +143,14 @@ class AjaxLadderControllerTest extends TestCase
     {
         $ladder = Ladder::factory()->create();
 
-        $response = $this->put('/ajax/ladders/' . $ladder->id, [
+        $response = $this->put('/ladders/' . $ladder->id, [
             'name' => 'Not yet bro too',
         ]);
 
         $response->assertRedirect('/login');
     }
 
-    protected function makeSomeMatchesForLadderAndMember(Ladder $ladder, User $member): array
+    protected function makeSomeGamesForLadderAndMember(Ladder $ladder, User $member): array
     {
         $noobTeam = Team::factory()->make([
             'elo' => 999,
@@ -177,16 +165,16 @@ class AjaxLadderControllerTest extends TestCase
         $ladder->teams()->save($proTeam);
         $member->teams()->save($proTeam);
 
-        $match = Match::create([
+        $game = Game::create([
             'processed_at' => now(),
         ]);
 
-        $match->teams()->save($noobTeam, ['score' => 0]);
-        $match->teams()->save($proTeam, ['score' => 11]);
+        $game->teams()->save($noobTeam, ['score' => 0]);
+        $game->teams()->save($proTeam, ['score' => 11]);
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->calculateAfterMatch($match);
+        $eloService->resolveByGame($game);
 
         return [$proTeam, $noobTeam];
     }

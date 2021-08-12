@@ -29,15 +29,9 @@ class LevelService
 
     protected function getLevels(): array
     {
-        $levels = array_map(function ($level) {
+        return array_map(function ($level) {
             return new Level($level);
         }, $this->config->get('level.levels'));
-
-        $levels = array_filter($levels, function ($level) {
-            return $level->isConsistent();
-        });
-
-        return $levels;
     }
 
     public function getNextLevel(Level $level): Level
