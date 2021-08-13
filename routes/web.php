@@ -32,3 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('ladders/{ladder}', [\App\Http\Controllers\LadderController::class, 'update'])->name('ladder.update');
     });
 });
+
+Route::get('images/{image}', [\App\Http\Controllers\ImageController::class, 'show'])
+    ->middleware('cache.headers:public;max_age=3600;etag')
+    ->name('image');

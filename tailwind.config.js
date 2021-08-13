@@ -5,12 +5,13 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ['Noto Sans', ...defaultTheme.fontFamily.sans],
-                title: ['Bangers'],
+                logo: ['Bangers'],
             },
             colors: {
-                'prussian-blue': '#082032',
-                'charcoal': '#334756',
-                'portland-orange': '#FF4C29',
+                'secondary-dark': '#1D2026',
+                'secondary': '#272A33',
+                'secondary-light': '#3D4351',
+                'primary': '#FF4C29',
             }
         }
     }

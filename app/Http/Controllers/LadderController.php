@@ -11,7 +11,7 @@ class LadderController extends Controller
 {
     public function index(): Response
     {
-        $ladders = Ladder::all();
+        $ladders = Ladder::withCount('teams')->get();
 
         return response()->view('ladder.index', ['ladders' => $ladders]);
     }
