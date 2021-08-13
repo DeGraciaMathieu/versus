@@ -5,15 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\Ladder;
 use App\Events\GamePlayed;
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreGame;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function create(Ladder $ladder)
+    public function create(Request $request, Ladder $ladder)
     {
-        abort(404);
+        $user = $request->user();
+
+        $teams = $ladder->teams()->with('users')->get();
+
+        $ownTeams = $teams->filter(function ($team) use ($user) {
+            return $team->users->contains($user);
+        });
+
+        $opponents = $teams->filter(function ($team) use ($user) {
+            return ! $team->users->contains($user);
+        });
+
+        return view('game.create', ['ladder' => $ladder, 'ownTeams' => $ownTeams, 'opponents' => $opponents]);
     }
 
     public function store(StoreGame $request, Ladder $ladder): RedirectResponse

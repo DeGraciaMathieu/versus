@@ -25,7 +25,9 @@ class GameControllerTest extends TestCase
         $member->teams()->attach($teams->first());
 
         $response = $this->actingAs($member)->get('/ladders/' . $ladder->id . '/games/create');
-        $response->assertNotFound(); // @todo Revoir quand l'interface des matchs sera prête
+        $response->assertSuccessful();
+        $this->assertEquals($teams[0]->name, $response['ownTeams'][0]->name);
+        $this->assertEquals($teams[1]->name, $response['opponents'][1]->name);
 
         $response = $this->actingAs($member)->post('/ladders/' . $ladder->id . '/games', [
             'home_id' => $teams->first()->id,
