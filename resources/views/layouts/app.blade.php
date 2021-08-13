@@ -31,12 +31,12 @@
                     </div>
 
                     <nav id="navMenu" class="w-full block flex-grow text-white mt-2 md:mt-0 md:flex md:items-center md:w-auto hidden">
-                        <div class="md:flex-grow">
+                        <div class="md:flex-grow md:flex md:justify-end">
                             <a href="{{ route('ladder.index') }}" class="block py-4 pl-4 flex items-center md:inline-block md:mt-0 hover:text-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                                 </svg>
-                                Jouer
+                                Ladders
                             </a>
                             @if(Auth::check() && Auth::user()->isAdmin())
                                 <a href="#" class="block py-4 pl-4 flex items-center md:inline-block md:mt-0 hover:text-primary">
@@ -49,11 +49,19 @@
                             @endif
                         </div>
                         <div>
-                            @guest
-                                <a href="{{ route('login') }}" class="m-4 px-4 py-2 text-center block text-sm border-primary border rounded text-primary hover:border-white hover:text-white">
+                            @auth
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <x-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="block m-4 p-3">
+                                        Se déconnecter
+                                    </x-link>
+                                </form>
+                            @else
+                                <x-link href="{{ route('login') }}" class="block m-4 p-3">
                                     Se connecter
-                                </a>
-                            @endguest
+                                </x-link>
+                            @endauth
                         </div>
                     </nav>
                 </header>
