@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('ladders/{ladder}/games', [\App\Http\Controllers\GameController::class, 'store'])->name('game.store');
     });
 
-    Route::group(['middleware' => 'is.admin'], function () {
+    Route::group(['middleware' => 'has.role:admin'], function () {
         Route::get('ladders/create', [\App\Http\Controllers\LadderController::class, 'create'])->name('ladder.create');
         Route::post('ladders', [\App\Http\Controllers\LadderController::class, 'store'])->name('ladder.store');
         Route::get('ladders/{ladder}/edit', [\App\Http\Controllers\LadderController::class, 'edit'])->name('ladder.edit');

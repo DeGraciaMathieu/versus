@@ -2,24 +2,29 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 
 class UserTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
-    public function user_is_admin()
+    public function has_role()
     {
-        $admin = User::factory()->make([
-            'role' => 'admin',
-        ]);
+        $author = User::factory()->create(['role' => 'member']);
 
-        $this->assertTrue($admin->isAdmin());
+        $this->assertTrue($author->hasRole('member'));
+    }
 
-        $gamer = User::factory()->make([
-            'role' => 'gamer',
-        ]);
+    /** @test */
+    public function has_one_of_the_roles()
+    {
+        $user = User::factory()->create(['role' => 'user']);
 
-        $this->assertFalse($gamer->isAdmin());
+        $this->assertFalse($user->hasOneOfTheseRole(['admin']));
+        $this->assertTrue($user->hasOneOfTheseRole(['user']));
+        $this->assertTrue($user->hasOneOfTheseRole(['user', 'admin']));
     }
 }
