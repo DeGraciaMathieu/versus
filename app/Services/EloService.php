@@ -2,34 +2,25 @@
 
 namespace App\Services;
 
-use App\Models\Match;
+use App\Models\Game;
 use App\Models\Team;
 
 class EloService
 {
-    /**
-     * @var LevelService
-     */
-    protected $levelService;
+    protected LevelService $levelService;
 
-    /**
-     * EloService constructor.
-     *
-     * @param LevelService $levelService
-     */
     public function __construct(LevelService $levelService)
     {
         $this->levelService = $levelService;
     }
 
     /**
-     * @param \App\Models\Match $match
-     * @throws \Exception
+     * Déduit l'elo des joueurs après un match.
      */
-    public function calculateAfterMatch(Match $match)
+    public function resolveByGame(Game $game): void
     {
-        $match->teams->each(function (Team $team) use ($match) {
-            $opponent =  $match->teams->where('id', '!=', $team->id)->first();
+        $game->teams->each(function (Team $team) use ($game) {
+            $opponent =  $game->teams->where('id', '!=', $team->id)->first();
 
             $teamLevel = $this->levelService->getLevelByElo($team->elo);
 
@@ -49,13 +40,13 @@ class EloService
 
             $eloDiff = $this->calculateDiff($teamLevel, $team->elo, $opponent->elo, $result);
 
-            $match->teams()->updateExistingPivot($team, [
+            $game->teams()->updateExistingPivot($team, [
                 'elo_diff' => $eloDiff,
                 'won' => $result === 1,
             ]);
         });
 
-        $match->teams()->each(function (Team $team) use ($match) {
+        $game->teams()->each(function (Team $team) use ($game) {
             $newElo = $team->elo + $team->pivot->elo_diff;
             $newLevel = $this->levelService->getLevelByElo($newElo);
 
@@ -67,13 +58,7 @@ class EloService
     }
 
     /**
-     * Calcule l'elo du joueur en fonction de celui de son adversaire et du vainqueur du match
-     *
-     * @param Level $teamLevel
-     * @param int $teamElo
-     * @param int $opponentElo
-     * @param float $result
-     * @return int
+     * Calcule l'elo du joueur en fonction de celui de son adversaire et du vainqueur du match.
      */
     protected function calculateDiff(Level $teamLevel, int $teamElo, int $opponentElo, float $result): int
     {
@@ -84,10 +69,6 @@ class EloService
 
     /**
      * Détermine le pourcentage de change de gagner du joueur par rapport à son adversaire.
-     *
-     * @param int $teamElo
-     * @param int $opponentElo
-     * @return float
      */
     protected function estimateChance(int $teamElo, int $opponentElo): float
     {

@@ -4,16 +4,15 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Lato', ...defaultTheme.fontFamily.sans],
-                title: ['Carter One'],
+                sans: ['Noto Sans', ...defaultTheme.fontFamily.sans],
+                logo: ['Bangers'],
             },
             colors: {
-                'yellow-star': '#fabc3b',
+                'secondary-dark': '#1D2026',
+                'secondary': '#272A33',
+                'secondary-light': '#3D4351',
+                'primary': '#FF4C29',
             }
         }
-    },
-    variants: {},
-    plugins: [
-        require('@tailwindcss/custom-forms')
-    ]
+    }
 }

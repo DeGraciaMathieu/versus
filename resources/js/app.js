@@ -1,17 +1,14 @@
 require('./bootstrap');
 
+import { createApp } from "vue"
+
 window.Vue = require('vue');
 
-Vue.component(
-    'ladder-ranking',
-    require('./components/Ladders/LadderRankingComponent.vue').default
-);
-
-Vue.component(
-    'ladder-component',
-    require('./components/Ladders/LadderComponent.vue').default
-);
-
-const app = new Vue({
+const app = createApp({
     el: '#app',
 });
+
+window.toggleMenu = function() {
+    let menu = document.getElementById("navMenu");
+    menu.classList.toggle("hidden");
+}

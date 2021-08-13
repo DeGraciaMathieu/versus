@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Ladder extends Model
 {
@@ -22,5 +24,11 @@ class Ladder extends Model
     public function teams(): HasMany
     {
         return $this->hasMany(Team::class);
+    }
+
+    public function thumbnail(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable')
+            ->select(['id', 'imageable_id', 'imageable_type']);
     }
 }

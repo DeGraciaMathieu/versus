@@ -24,8 +24,8 @@ class Team extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function matches(): BelongsToMany
+    public function games(): BelongsToMany
     {
-        return $this->belongsToMany(Match::class)->withPivot('score', 'elo_diff', 'won');
+        return $this->belongsToMany(Game::class)->withPivot('score', 'elo_diff', 'won');
     }
 }

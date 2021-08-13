@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Events\MatchAdded;
+use App\Events\GamePlayed;
 use Illuminate\Auth\Events\Registered;
-use App\Listeners\CalculateEloAfterMatch;
+use App\Listeners\ResolveEloAfterGame;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -19,8 +19,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        MatchAdded::class => [
-            CalculateEloAfterMatch::class,
+        GamePlayed::class => [
+            ResolveEloAfterGame::class,
         ],
     ];
 
