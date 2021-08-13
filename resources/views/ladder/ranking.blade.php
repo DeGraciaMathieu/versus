@@ -1,30 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-sm mx-auto text-white text-xl text-shadow font-bold text-center bg-blue-700 py-2 mb-4">
-        {{ $ladder->name }}
-    </div>
-    <div class="max-w-sm mx-auto mb-4 flex">
-        <a href="{{ route('game.create', $ladder) }}" class="text-center w-full text-white text-shadow uppercase bg-yellow-star font-bold py-1 border-b-4 border-yellow-600 sm:hover:shadow-lg">
-            Fight !
-        </a>
-    </div>
-    <div class="max-w-sm overflow-hidden mx-auto text-shadow">
+    <h1 class="font-bold text-3xl text-white mt-8 mb-6 md:w-2/3 md:mx-auto md:flex md:items-center">
+        <span class="md:flex-grow">
+            <a href="{{ route('ladder.index') }}" class="text-primary hover:text-white">Ladders</a> / {{ $ladder->name }}
+        </span>
+        <x-link href="{{ route('game.create', $ladder) }}" class="hidden md:block p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+        </x-link>
+    </h1>
+    <x-link href="{{ route('game.create', $ladder) }}" class="md:hidden fixed bottom-0 right-0 p-3 mr-4 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+    </x-link>
+    <div class="grid grid-cols-1 md:w-2/3 md:mx-auto text-white">
         @foreach($teams as $team)
-            <div class="flex px-3 py-6 bg-blue-500 border-b-2 border-t border-l border-r border-black mb-4 text-white font-bold">
-                <div class="self-center w-1/6 text-center text-black">
-                    <img class="border-2 border-black" src="https://www.mobafire.com/images/avatars/ziggs-mad-scientist.png" alt="">
+            <div class="flex items-center mb-6 border-b border-primary">
+                <div class="bg-primary text-2xl py-4 px-5 font-logo">
+                    <span></span>{{ $team->rank }}
                 </div>
-                <div class="self-center w-4/6 pl-2">
-                    <div class="text-lg">
+                <div class="self-center w-4/6 pl-3 py-2">
+                    <div>
                         {{ $team->name }}
                     </div>
-                    <div>
+                    <div class="text-sm">
                         {{ $team->elo }} pts
                     </div>
-                </div>
-                <div class="self-center w-1/6 text-center text-lg bg-blue-700 py-3">
-                    {{ $team->rank }}
                 </div>
             </div>
         @endforeach

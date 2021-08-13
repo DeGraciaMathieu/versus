@@ -20,7 +20,7 @@ class LadderSeeder extends Seeder
         $ladders = Ladder::factory(5)->create();
 
         $ladders->each(function (Ladder $ladder) {
-            $ladder->teams()->saveMany($teams = Team::factory()->count($max = 4)->make());
+            $ladder->teams()->saveMany($teams = Team::factory()->count($max = 8)->make());
 
             $teams = $teams->random($max);
 
