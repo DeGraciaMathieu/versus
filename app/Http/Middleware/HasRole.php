@@ -17,7 +17,7 @@ class HasRole
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if ($request->user()->hasOhasOneOfTheseRole($roles)) {
+        if ($request->user()->hasOneOfTheseRole($roles)) {
             return $next($request);
         }
 
