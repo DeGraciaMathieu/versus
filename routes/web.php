@@ -44,7 +44,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['middleware' => 'is.admin'], function () {
+        Route::get('ladders/create', [\App\Http\Controllers\LadderController::class, 'create'])->name('ladder.create');
         Route::post('ladders', [\App\Http\Controllers\LadderController::class, 'store'])->name('ladder.store');
+        Route::get('ladders/{ladder}/edit', [\App\Http\Controllers\LadderController::class, 'edit'])->name('ladder.edit');
         Route::put('ladders/{ladder}', [\App\Http\Controllers\LadderController::class, 'update'])->name('ladder.update');
     });
 });

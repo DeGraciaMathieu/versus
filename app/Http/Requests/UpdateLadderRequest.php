@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreLadderFormRequest extends FormRequest
+class UpdateLadderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

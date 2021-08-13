@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLadderRequest;
+use App\Http\Requests\UpdateLadderRequest;
 use App\Models\Ladder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,12 +38,8 @@ class LadderController extends Controller
         return response()->view('ladder.ranking', ['ladder' => $ladder, 'teams' => $teams]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreLadderRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
-
         Ladder::create(
             $request->only(['name', 'description'])
         );
@@ -49,12 +47,8 @@ class LadderController extends Controller
         return redirect()->route('ladder.index');
     }
 
-    public function update(Request $request, Ladder $ladder): RedirectResponse
+    public function update(UpdateLadderRequest $request, Ladder $ladder): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
-
         $ladder->update(
             $request->only(['name', 'description'])
         );

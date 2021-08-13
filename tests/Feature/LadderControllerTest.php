@@ -59,6 +59,9 @@ class LadderControllerTest extends TestCase
             'role' => 'admin',
         ]);
 
+        $response = $this->actingAs($admin)->get('/ladders/create');
+        $response->assertSuccessful();
+
         $response = $this->actingAs($admin)->post('/ladders', [
             'name' => $name = '100v100 King',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
@@ -108,6 +111,9 @@ class LadderControllerTest extends TestCase
             'name' => 'From the past with love',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
         ]);
+
+        $response = $this->actingAs($admin)->get('/ladders/' . $ladder->id . '/edit');
+        $response->assertSuccessful();
 
         $response = $this->actingAs($admin)->put('/ladders/' . $ladder->id, [
             'name' => $name = 'New age !',
