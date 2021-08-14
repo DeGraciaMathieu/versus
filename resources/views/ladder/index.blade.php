@@ -23,7 +23,9 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 md:w-2/3 md:mx-auto">
         @foreach($ladders as $ladder)
             <div class="bg-secondary-light flex flex-col">
-                <div class="h-32 bg-cover bg-center" style="background-image: url({{ route('image', $ladder->thumbnail) }})">&nbsp;</div>
+                @if($ladder->thumbnail)
+                    <div class="h-32 bg-cover bg-center" style="background-image: url({{ route('image', $ladder->thumbnail) }})">&nbsp;</div>
+                @endif
                 <div class="flex-grow px-6 py-4">
                     <div class="font-bold text-xl text-primary mb-2">
                         {{ $ladder->name }}

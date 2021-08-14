@@ -25,7 +25,8 @@ class UpdateLadderRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'description' => 'nullable',
+            'description' => 'required',
+            'thumbnail' => 'image',
         ];
     }
 }

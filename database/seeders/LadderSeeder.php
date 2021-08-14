@@ -7,6 +7,7 @@ use App\Models\Ladder;
 use App\Models\Team;
 use App\Services\EloService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class LadderSeeder extends Seeder
 {
