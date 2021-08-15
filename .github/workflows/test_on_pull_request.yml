@@ -1,9 +1,9 @@
-name: Run test on PR from release.
+name: Run test on PR from dev.
 
 on:
   pull_request:
     branches:
-      - release
+      - dev
 
 jobs:
   test:
