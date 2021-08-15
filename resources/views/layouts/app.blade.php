@@ -7,6 +7,12 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Icons -->
+        <link href="{{ asset('images/favicon-16x16.png') }}" rel="icon" sizes="16x16"/>
+        <link href="{{ asset('images/favicon-32x32.png') }}" rel="icon" sizes="32x32"/>
+        <link href="{{ asset('images/favicon-96x96.png') }}" rel="icon" sizes="96x96"/>
+        <link href="{{ asset('images/favicon-256x256.png') }}" rel="icon" sizes="256x256"/>
+
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Bangers:400,600,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,600,700" rel="stylesheet">
