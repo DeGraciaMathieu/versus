@@ -57,6 +57,7 @@ jobs:
           rsync -az --delete --delete-excluded --chmod=D755,F644 --exclude "node_modules" --exclude ".git*" "$PWD"/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.WORKDIR }}/
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/bootstrap/cache"
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/logs"
+          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/app"
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/framework/cache"
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/framework/sessions"
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/framework/views"
