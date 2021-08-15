@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\Team;
 use App\Models\User;
@@ -55,6 +57,8 @@ class LadderControllerTest extends TestCase
     /** @test */
     public function admin_can_create_ladder()
     {
+        Storage::fake();
+
         $admin = User::factory()->create([
             'role' => 'admin',
         ]);
@@ -65,13 +69,38 @@ class LadderControllerTest extends TestCase
         $response = $this->actingAs($admin)->post('/ladders', [
             'name' => $name = '100v100 King',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
+            'thumbnail' => UploadedFile::fake()->createWithContent(
+                'thumbnail.jpg',
+                base64_decode(config('image.ladder.data'))
+            ),
         ]);
+
+        $thumbnail = config('image.ladder.filename');
+
+        Storage::disk()->assertExists('images/' . $thumbnail);
 
         $response->assertRedirect('/');
 
         $this->assertDatabaseHas('ladders', [
             'name' => $name,
+            'thumbnail' => $thumbnail,
         ]);
+    }
+
+    /** @test */
+    public function admin_cant_create_ladder_without_thumbnail()
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+
+        $response = $this->from('/ladders/create')->actingAs($admin)->post('/ladders', [
+            'name' => '100v100 King',
+            'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
+        ]);
+
+        $response->assertSessionHasErrors(['thumbnail']);
+        $response->assertRedirect('/ladders/create');
     }
 
     /** @test */
@@ -125,6 +154,40 @@ class LadderControllerTest extends TestCase
         $this->assertDatabaseHas('ladders', [
             'id' => $ladder->id,
             'name' => $name,
+        ]);
+    }
+
+    /** @test */
+    public function admin_can_edit_ladder_with_thumbnail()
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+
+        $ladder = Ladder::factory()->create([
+            'name' => 'From the past with love',
+            'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
+        ]);
+
+        $response = $this->actingAs($admin)->put('/ladders/' . $ladder->id, [
+            'name' => $name = '100v100 King',
+            'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
+            'thumbnail' => UploadedFile::fake()->createWithContent(
+                'thumbnail.jpg',
+                base64_decode(config('image.ladder.data'))
+            ),
+        ]);
+
+        $thumbnail = config('image.ladder.filename');
+
+        Storage::disk()->assertExists('images/' . $thumbnail);
+
+        $response->assertRedirect('/');
+
+        $this->assertDatabaseHas('ladders', [
+            'id' => $ladder->id,
+            'name' => $name,
+            'thumbnail' => $thumbnail,
         ]);
     }
 

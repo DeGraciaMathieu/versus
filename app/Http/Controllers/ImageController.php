@@ -9,7 +9,13 @@ class ImageController extends Controller
 {
     public function show(string $filename): Response
     {
-        $image = Storage::get('images/' . $filename);
+        $path = 'images/' . $filename;
+
+        if (! Storage::exists($path)) {
+            abort(404);
+        }
+
+        $image = Storage::get($path);
 
         $headers = [
             'Content-Type' => 'image/jpeg',

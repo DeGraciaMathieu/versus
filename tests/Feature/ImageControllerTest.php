@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Ladder;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImageControllerTest extends TestCase
@@ -15,11 +16,18 @@ class ImageControllerTest extends TestCase
     /** @test */
     public function guest_can_show_image()
     {
-        $ladder = Ladder::factory()->create();
+        $image = 'beautifulthing';
 
-        $image = $ladder->thumbnail;
+        Storage::shouldReceive('exists')
+            ->andReturn(true);
 
-        $response = $this->get('/images/' . $image->id);
+        Storage::shouldReceive('get')
+            ->with('images/' . $image)
+            ->andReturn(
+                'aaa'
+            );
+
+        $response = $this->get('/images/' . $image);
 
         $response->assertSuccessful();
         $response->assertHeader('Content-Type', 'image/jpeg');
