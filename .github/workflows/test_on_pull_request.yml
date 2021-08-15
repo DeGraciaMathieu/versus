@@ -1,21 +1,21 @@
-name: Run test on pull requests.
+name: Run test on PR from release.
 
 on:
   pull_request:
     branches:
-      - master
+      - release
 
 jobs:
-  run-tests:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Use PHP 8.0
-        uses: shivammathur/setup-php@v1
+      - uses: actions/checkout@v2
+      - name: Set PHP version
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: '8.0'
       - name: Install composer dependencies
         run: composer install --quiet --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: php vendor/bin/phpunit
