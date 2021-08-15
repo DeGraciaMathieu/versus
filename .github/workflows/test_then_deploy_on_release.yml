@@ -56,7 +56,6 @@ jobs:
         run: |
           rsync -az \
             --delete \
-            --delete-excluded \
             --chmod=D755,F644 \
             --exclude "node_modules" \
             --exclude ".git*" \
