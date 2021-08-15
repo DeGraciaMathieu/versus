@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLadderRequest;
+use App\Http\Requests\UpdateLadderRequest;
+use App\Models\Image;
 use App\Models\Ladder;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class LadderController extends Controller
 {
+    private ImageService $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService =$imageService;
+    }
+
     public function index(): Response
     {
         $ladders = Ladder::withCount('teams')->get();
@@ -36,24 +47,38 @@ class LadderController extends Controller
         return response()->view('ladder.ranking', ['ladder' => $ladder, 'teams' => $teams]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function create()
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
+        return response()->view('ladder.create');
+    }
+
+    public function store(StoreLadderRequest $request): RedirectResponse
+    {
+        $filename = $this->imageService->fitAndSave(
+            $request->file('thumbnail')
+        );
 
         Ladder::create(
-            $request->only(['name', 'description'])
+            $request->only(['name', 'description']) + ['thumbnail' => $filename]
         );
 
         return redirect()->route('ladder.index');
     }
 
-    public function update(Request $request, Ladder $ladder): RedirectResponse
+    public function edit(Ladder $ladder)
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
+        return response()->view('ladder.edit', ['ladder' => $ladder]);
+    }
+
+    public function update(UpdateLadderRequest $request, Ladder $ladder): RedirectResponse
+    {
+        if ($request->hasFile('thumbnail')) {
+            $filename = $this->imageService->fitAndSave(
+                $request->file('thumbnail')
+            );
+
+            $ladder->thumbnail = $filename;
+        }
 
         $ladder->update(
             $request->only(['name', 'description'])

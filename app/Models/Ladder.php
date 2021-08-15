@@ -18,17 +18,11 @@ class Ladder extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description',
+        'name', 'description', 'thumbnail',
     ];
 
     public function teams(): HasMany
     {
         return $this->hasMany(Team::class);
-    }
-
-    public function thumbnail(): MorphOne
-    {
-        return $this->morphOne(Image::class, 'imageable')
-            ->select(['id', 'imageable_id', 'imageable_type']);
     }
 }

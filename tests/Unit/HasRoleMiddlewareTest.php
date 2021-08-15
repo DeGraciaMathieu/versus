@@ -6,13 +6,13 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-class IsAdminMiddlewareTest extends TestCase
+class HasRoleMiddlewareTest extends TestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
 
-        Route::middleware('is.admin')->get('/_tests/noway', function () {});
+        Route::middleware('has.role:admin')->get('/_tests/noway', function () {});
     }
 
     /** @test */

@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\UnexpectedImageDataException;
-use App\Models\Image;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
-    public function show(Image $image): Response
+    public function show(string $filename): Response
     {
-        try {
-            $headers = [
-                'Content-Type' => $image->getType(),
-            ];
+        $path = 'images/' . $filename;
 
-            return response(base64_decode($image->data), 200, $headers);
-        } catch (UnexpectedImageDataException $e) {
-            abort(500);
+        if (! Storage::exists($path)) {
+            abort(404);
         }
+
+        $image = Storage::get($path);
+
+        $headers = [
+            'Content-Type' => 'image/jpeg',
+        ];
+
+        return response($image, 200, $headers);
     }
 }
