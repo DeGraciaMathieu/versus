@@ -52,12 +52,33 @@ class GameControllerTest extends TestCase
     }
 
     /** @test */
-    public function member_without_team_cant_register_game()
+    public function member_without_team_can_register_game_in_ladder_with_single_mode()
     {
         $member = User::factory()->create([
             'role' => 'member',
         ]);
-        $ladder = Ladder::factory()->create();
+        $ladder = Ladder::factory()->create([
+            'mode' => 'single',
+        ]);
+
+        $response = $this->actingAs($member)->get('/ladders/' . $ladder->id . '/games/create');
+        $response->assertSuccessful();
+
+        $this->assertDatabaseHas('teams', [
+            'name' => $member->name,
+            'ladder_id' => $ladder->id,
+        ]);
+    }
+
+    /** @test */
+    public function member_without_team_cant_register_game_in_ladder_without_single_mode()
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+        ]);
+        $ladder = Ladder::factory()->create([
+            'mode' => 'team',
+        ]);
 
         $response = $this->actingAs($member)->get('/ladders/' . $ladder->id . '/games/create');
         $response->assertRedirect('/ladders/' . $ladder->id . '/teams/create');
