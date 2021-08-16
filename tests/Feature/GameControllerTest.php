@@ -100,4 +100,108 @@ class GameControllerTest extends TestCase
         $response->assertRedirect('/login');
         $this->assertDatabaseCount('games', 0);
     }
+
+    /** @test */
+    public function admin_can_list_games()
+    {
+        $ladder = Ladder::factory()->create();
+        $ladder->teams()->saveMany(
+            list($winner, $looser) = Team::factory(2)->make([
+                'elo' => 500,
+            ])
+        );
+
+        $this->makeAGame($winner, $looser);
+
+        $admin = User::factory()->create([
+            'role' => 'admin'
+        ]);
+
+        $response = $this->actingAs($admin)->get('/games');
+        $response->assertSuccessful();
+        $this->assertCount(1, $response['games']);
+    }
+
+    /** @test */
+    public function member_cant_list_games()
+    {
+        $member = User::factory()->create();
+
+        $response = $this->actingAs($member)->get('/games');
+        $response->assertForbidden();
+    }
+
+    /** @test */
+    public function guest_cant_list_games()
+    {
+        $response = $this->get('/games');
+        $response->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function admin_can_delete_game()
+    {
+        $ladder = Ladder::factory()->create();
+        $ladder->teams()->saveMany(
+            list($winner, $looser) = Team::factory(2)->make([
+                'elo' => 500,
+            ])
+        );
+
+        $game = $this->makeAGame($winner, $looser);
+
+        $admin = User::factory()->create([
+            'role' => 'admin'
+        ]);
+
+        $response = $this->actingAs($admin)->delete('/games/' . $game->id);
+        $response->assertRedirect('/games');
+
+        $this->assertDatabaseMissing('games', [
+            'id' => $game->id,
+        ]);
+
+        $this->assertDatabaseHas('teams', [
+            'id' => $winner->id,
+            'elo' => 500,
+        ]);
+
+        $this->assertDatabaseHas('teams', [
+            'id' => $looser->id,
+            'elo' => 500,
+        ]);
+    }
+
+    /** @test */
+    public function member_cant_delete_game()
+    {
+        $ladder = Ladder::factory()->create();
+        $ladder->teams()->saveMany(
+            list($winner, $looser) = Team::factory(2)->make([
+                'elo' => 500,
+            ])
+        );
+
+        $game = $this->makeAGame($winner, $looser);
+        $member = User::factory()->create();
+
+        $response = $this->actingAs($member)->delete('/games/' . $game->id);
+        $response->assertForbidden();
+    }
+
+    /** @test */
+    public function guest_cant_delete_game()
+    {
+        $ladder = Ladder::factory()->create();
+        $ladder->teams()->saveMany(
+            list($winner, $looser) = Team::factory(2)->make([
+                'elo' => 500,
+            ])
+        );
+
+        $game = $this->makeAGame($winner, $looser);
+
+        $response = $this->delete('/games/' . $game->id);
+        $response->assertRedirect('/login');
+    }
 }
