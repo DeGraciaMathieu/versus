@@ -2,22 +2,17 @@
 
 Fight !?
 
-### Comment lancer l'application ?
+### Comment lancer l'environnement de développement ?
 
 ```bash
-# dev
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# Installation
+cp .env.example .env
+docker-compose up -d
 
-# prod
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-```
-
-### Comment construire son projet ?
-
-```bash
-# composer
+# Installation des dépendances 
 docker-compose exec app composer up
-# assets
+
+# Construction des assets
 docker-compose exec app yarn install
 docker-compose exec app yarn run dev
 ```
