@@ -5,12 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
-use App\Models\Team;
 use App\Models\User;
-use App\Models\Game;
 use App\Models\Ladder;
-use App\Services\EloService;
-use App\Services\LevelService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LadderControllerTest extends TestCase
@@ -36,7 +32,7 @@ class LadderControllerTest extends TestCase
         $ladder = Ladder::factory()->create();
         $member = User::factory()->create();
 
-        $teams = $this->makeSomeGamesForLadderAndMember($ladder, $member);
+        list($memberTeam, $opponentTeam) = $this->makeSomeGamesForLadderAndMember($ladder, $member);
 
         $response = $this->actingAs($member)->get('/ladders/' . $ladder->id . '/ranking');
 
@@ -45,11 +41,11 @@ class LadderControllerTest extends TestCase
 
         $this->assertCount(2, $response['teams']);
 
-        $this->assertEquals($teams[0]->name, $response['teams'][0]->name);
+        $this->assertEquals($memberTeam->name, $response['teams'][0]->name);
         $this->assertEquals(1, $response['teams'][0]->rank);
         $this->assertTrue($response['teams'][0]->current);
 
-        $this->assertEquals($teams[1]->name, $response['teams'][1]->name);
+        $this->assertEquals($opponentTeam->name, $response['teams'][1]->name);
         $this->assertEquals(2, $response['teams'][1]->rank);
         $this->assertFalse($response['teams'][1]->current);
     }
@@ -220,34 +216,5 @@ class LadderControllerTest extends TestCase
         ]);
 
         $response->assertRedirect('/login');
-    }
-
-    protected function makeSomeGamesForLadderAndMember(Ladder $ladder, User $member): array
-    {
-        $noobTeam = Team::factory()->make([
-            'elo' => 999,
-        ]);
-
-        $ladder->teams()->save($noobTeam);
-
-        $proTeam = Team::factory()->make([
-            'elo' => 2200,
-        ]);
-
-        $ladder->teams()->save($proTeam);
-        $member->teams()->save($proTeam);
-
-        $game = Game::create([
-            'processed_at' => now(),
-        ]);
-
-        $game->teams()->save($noobTeam, ['score' => 0]);
-        $game->teams()->save($proTeam, ['score' => 11]);
-
-        $eloService = new EloService(new LevelService($this->app->get('config')));
-
-        $eloService->resolveByGame($game);
-
-        return [$proTeam, $noobTeam];
     }
 }

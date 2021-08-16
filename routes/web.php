@@ -48,6 +48,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('ladders', [\App\Http\Controllers\LadderController::class, 'store'])->name('ladder.store');
         Route::get('ladders/{ladder}/edit', [\App\Http\Controllers\LadderController::class, 'edit'])->name('ladder.edit');
         Route::put('ladders/{ladder}', [\App\Http\Controllers\LadderController::class, 'update'])->name('ladder.update');
+
+        Route::get('games', [\App\Http\Controllers\GameController::class, 'index'])->name('game.index');
+        Route::delete('games/{game}', [\App\Http\Controllers\GameController::class, 'destroy'])->name('game.destroy');
     });
 });
 

@@ -6,11 +6,21 @@ use App\Models\Game;
 use App\Models\Ladder;
 use App\Events\GamePlayed;
 use App\Http\Requests\StoreGame;
+use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
+    public function index()
+    {
+        $games = Game::with('teams.ladder')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('game.index', ['games' => $games]);
+    }
+
     public function create(Request $request, Ladder $ladder)
     {
         $user = $request->user();
@@ -43,5 +53,20 @@ class GameController extends Controller
         event(new GamePlayed($game));
 
         return redirect()->route('ladder.ranking', $ladder);
+    }
+
+    public function destroy(Game $game)
+    {
+        $game->teams->each(function (Team $team) {
+            $team->elo -= $team->pivot->elo_diff;
+
+            $team->update();
+        });
+
+        $game->teams()->detach();
+
+        $game->delete();
+
+        return redirect()->route('game.index');
     }
 }
