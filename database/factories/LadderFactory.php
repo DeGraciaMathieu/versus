@@ -26,6 +26,7 @@ class LadderFactory extends Factory
             'name' => $this->faker->unique()->randomElement(['Ping-Pong', 'Ping-Pong', 'Street Fighter', 'Shifumi', 'Mario Kart', 'Windjammers']),
             'description' => $this->faker->text(42),
             'thumbnail' => config('image.ladder.filename'),
+            'mode' => 'single',
         ];
     }
 

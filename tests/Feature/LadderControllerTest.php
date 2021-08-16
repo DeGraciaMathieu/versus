@@ -69,6 +69,7 @@ class LadderControllerTest extends TestCase
         $response = $this->actingAs($admin)->post('/ladders', [
             'name' => $name = '100v100 King',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
+            'mode' => 'single',
             'thumbnail' => UploadedFile::fake()->createWithContent(
                 'thumbnail.jpg',
                 base64_decode(config('image.ladder.data'))
@@ -147,6 +148,7 @@ class LadderControllerTest extends TestCase
         $response = $this->actingAs($admin)->put('/ladders/' . $ladder->id, [
             'name' => $name = 'New age !',
             'description' => "Everyday I'm Shuffling ...",
+            'mode' => 'team',
         ]);
 
         $response->assertRedirect('/');
@@ -172,6 +174,7 @@ class LadderControllerTest extends TestCase
         $response = $this->actingAs($admin)->put('/ladders/' . $ladder->id, [
             'name' => $name = '100v100 King',
             'description' => 'Lorem Elsass ipsum Salu bissame Spätzle ...',
+            'mode' => 'single',
             'thumbnail' => UploadedFile::fake()->createWithContent(
                 'thumbnail.jpg',
                 base64_decode(config('image.ladder.data'))

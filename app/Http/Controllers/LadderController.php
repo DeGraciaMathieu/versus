@@ -59,7 +59,7 @@ class LadderController extends Controller
         );
 
         Ladder::create(
-            $request->only(['name', 'description']) + ['thumbnail' => $filename]
+            $request->only(['name', 'description', 'mode']) + ['thumbnail' => $filename]
         );
 
         return redirect()->route('ladder.index');
@@ -81,7 +81,7 @@ class LadderController extends Controller
         }
 
         $ladder->update(
-            $request->only(['name', 'description'])
+            $request->only(['name', 'description', 'mode'])
         );
 
         return redirect()->route('ladder.index');

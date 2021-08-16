@@ -26,6 +26,7 @@ class UpdateLadderRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'required',
+            'mode' => 'required|in:single,team',
             'thumbnail' => 'image',
         ];
     }

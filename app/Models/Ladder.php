@@ -18,11 +18,16 @@ class Ladder extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'thumbnail',
+        'name', 'description', 'thumbnail', 'mode',
     ];
 
     public function teams(): HasMany
     {
         return $this->hasMany(Team::class);
+    }
+
+    public function hasSingleMode(): bool
+    {
+        return $this->mode === 'single';
     }
 }

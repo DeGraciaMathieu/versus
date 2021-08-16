@@ -26,6 +26,10 @@
             <x-input id="name" type="text" name="name" :value="old('name', $ladder->name)" />
         </div>
         <div class="mb-4">
+            <x-label for="description">Mode</x-label>
+            <x-select id="mode" name="mode" :options="['single' => __('Solo'), 'team' => __('Équipe')]" :value="old('mode', $ladder->mode)"/>
+        </div>
+        <div class="mb-4">
             <x-label for="description">Description</x-label>
             <x-input id="description" type="text" name="description" :value="old('description', $ladder->description)" />
         </div>
