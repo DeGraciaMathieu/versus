@@ -29,7 +29,7 @@ class LadderController extends Controller
 
     public function ranking(Request $request, Ladder $ladder): Response
     {
-        $teams = $ladder->teams()->whereNotNull('level')->orderBy('elo', 'desc')->get();
+        $teams = $ladder->teams()->orderBy('elo', 'desc')->get();
 
         $currentUserTeamId = null;
 
