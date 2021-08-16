@@ -26,49 +26,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set PHP version
-        uses: shivammathur/setup-php@v2
+      - name: Deploy
+        uses: jbrooksuk/laravel-forge-action@v1.0.2
         with:
-          php-version: '8.0'
-      - name: Install composer dependencies
-        run: composer install --quiet --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-      - name: Setup Nodejs
-        uses: actions/setup-node@v2
-        with:
-          node-version: '15'
-      - name: Build assets
-        run: |
-          npm install
-          npm run prod
-      - name: Set env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
-      - name: Config ssh
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
-          echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-          chmod 700 ~/.ssh
-          chmod 600 ~/.ssh/id_rsa
-      - name: Sync files on server
-        run: |
-          rsync -az \
-            --delete \
-            --chmod=D755,F644 \
-            --exclude "node_modules" \
-            --exclude ".git*" \
-            --exclude "bootstrap/cache" \
-            --exclude "storage/logs" \
-            --exclude "storage/app" \
-            --exclude "storage/framework/cache" \
-            --exclude "storage/framework/sessions" \
-            --exclude "storage/framework/views" \
-            "$PWD"/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.WORKDIR }}/
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/bootstrap/cache"
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/logs"
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/app"
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/framework/cache"
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/framework/sessions"
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "chmod 777 ${{ secrets.WORKDIR }}/storage/framework/views"
+          trigger_url: ${{ secrets.TRIGGER_URL }}
