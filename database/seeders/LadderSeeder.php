@@ -18,21 +18,23 @@ class LadderSeeder extends Seeder
      */
     public function run()
     {
-        $ladders = Ladder::factory(5)->create();
+        $ladders = Ladder::factory(3)->create();
 
         $ladders->each(function (Ladder $ladder) {
-            $ladder->teams()->saveMany($teams = Team::factory()->count($max = 8)->make());
+            $ladder->teams()->saveMany($teams = Team::factory()->count($max = 5)->make());
 
             $teams = $teams->random($max);
 
             for ($i = 0; $i < 3; $i++) {
-                $teams->each(function ($team) use ($teams, $max) {
+                $teams->each(function ($team) use ($teams, $ladder, $max) {
                     $opponents = $teams->where('id', '!=', $team->id)->random($max - 1);
 
-                    $opponents->each(function ($opponent) use ($team) {
-                        $game = Game::create([
+                    $opponents->each(function ($opponent) use ($team, $ladder) {
+                        $game = Game::make([
                             'processed_at' => now(),
                         ]);
+
+                        $ladder->games()->save($game);
 
                         $teamScore = 11;
                         $opponentScore = rand(0, 9);
