@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 
 class BladeServiceProvider extends ServiceProvider
@@ -33,6 +34,10 @@ class BladeServiceProvider extends ServiceProvider
             $roles = is_array($value) ? $value : [$value];
 
             return Auth::user()->hasOneOfTheseRole($roles);
+        });
+
+        Blade::if('current', function ($value) {
+           return Request::is($value);
         });
     }
 }

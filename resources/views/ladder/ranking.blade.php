@@ -16,6 +16,15 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
     </x-link>
+    <div class="overflow-hidden">
+        <ul class="text-white flex items-stretch justify-between md:justify-start mb-6 overflow-auto md:w-2/3 md:mx-auto">
+            <li class="@current('ladders/*/ranking') border-primary @else border-secondary-light @endcurrent hover:border-primary py-4 px-4 border-b-2 text-center flex-grow md:flex-grow-0">Classement</li>
+            <li class="@current('ladders/*/matches') border-primary @else border-secondary-light @endcurrent hover:border-primary py-4 px-4 border-b-2 text-center border-green-500 flex-grow md:flex-grow-0">Matchs</li>
+            @role(['admin'])
+                <li class="@current('ladders/*/edit') border-primary @else border-secondary-light @endcurrent hover:border-primary py-4 px-4 border-b-2 text-center border-purple-500 flex-grow md:flex-grow-0">Editer</li>
+            @endrole
+        </ul>
+    </div>
     <div class="grid grid-cols-1 md:w-2/3 md:mx-auto text-white">
         @foreach($teams as $team)
             <div class="flex items-center mb-6 border-b border-primary">
