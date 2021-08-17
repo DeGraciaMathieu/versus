@@ -31,16 +31,18 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($proTeam);
 
-        $match = Game::create([
+        $game = Game::make([
             'processed_at' => now(),
         ]);
 
-        $match->teams()->save($noobTeam, ['score' => 0]);
-        $match->teams()->save($proTeam, ['score' => 11]);
+        $ladder->games()->save($game);
+
+        $game->teams()->save($noobTeam, ['score' => 0]);
+        $game->teams()->save($proTeam, ['score' => 11]);
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->resolveByGame($match);
+        $eloService->resolveByGame($game);
 
         $this->assertDatabaseHas('teams', [
             'id' => $noobTeam->id,
@@ -70,16 +72,18 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($proTeam);
 
-        $match = Game::create([
+        $game = Game::make([
             'processed_at' => now(),
         ]);
 
-        $match->teams()->save($noobTeam, ['score' => 13]);
-        $match->teams()->save($proTeam, ['score' => 11]);
+        $ladder->games()->save($game);
+
+        $game->teams()->save($noobTeam, ['score' => 13]);
+        $game->teams()->save($proTeam, ['score' => 11]);
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->resolveByGame($match);
+        $eloService->resolveByGame($game);
 
         $this->assertDatabaseHas('teams', [
             'id' => $noobTeam->id,
@@ -107,16 +111,18 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($proTeam);
 
-        $match = Game::create([
+        $game = Game::make([
             'processed_at' => now(),
         ]);
 
-        $match->teams()->save($newChallenger, ['score' => 13]);
-        $match->teams()->save($proTeam, ['score' => 11]);
+        $ladder->games()->save($game);
+
+        $game->teams()->save($newChallenger, ['score' => 13]);
+        $game->teams()->save($proTeam, ['score' => 11]);
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->resolveByGame($match);
+        $eloService->resolveByGame($game);
 
         $this->assertDatabaseHas('teams', [
             'id' => $newChallenger->id,
@@ -146,16 +152,18 @@ class EloServiceTest extends TestCase
 
         $ladder->teams()->save($secondTeam);
 
-        $match = Game::create([
+        $game = Game::make([
             'processed_at' => now(),
         ]);
 
-        $match->teams()->save($firstTeam, ['score' => 9]);
-        $match->teams()->save($secondTeam, ['score' => 9]);
+        $ladder->games()->save($game);
+
+        $game->teams()->save($firstTeam, ['score' => 9]);
+        $game->teams()->save($secondTeam, ['score' => 9]);
 
         $eloService = new EloService(new LevelService($this->app->get('config')));
 
-        $eloService->resolveByGame($match);
+        $eloService->resolveByGame($game);
 
         $this->assertDatabaseHas('teams', [
             'id' => $firstTeam->id,

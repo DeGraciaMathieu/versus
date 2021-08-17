@@ -29,16 +29,18 @@ abstract class TestCase extends BaseTestCase
         $ladder->teams()->save($memberTeam);
         $member->teams()->save($memberTeam);
 
-        $this->makeAGame($memberTeam, $opponentTeam);
+        $this->makeAGame($ladder, $memberTeam, $opponentTeam);
 
         return [$memberTeam, $opponentTeam];
     }
 
-    protected function makeAGame(Team $winner, Team $looser)
+    protected function makeAGame(Ladder $ladder, Team $winner, Team $looser)
     {
-        $game = Game::create([
+        $game = Game::make([
             'processed_at' => now(),
         ]);
+
+        $ladder->games()->save($game);
 
         $game->teams()->save($winner, ['score' => 1]);
         $game->teams()->save($looser, ['score' => 0]);

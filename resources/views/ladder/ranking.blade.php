@@ -17,13 +17,13 @@
         </svg>
     </x-link>
     <div class="overflow-hidden">
-        <ul class="text-white flex items-stretch justify-between md:justify-start mb-6 overflow-auto md:w-2/3 md:mx-auto">
-            <li class="@current('ladders/*/ranking') border-primary @else border-secondary-light @endcurrent hover:border-primary py-4 px-4 border-b-2 text-center flex-grow md:flex-grow-0">Classement</li>
-            <li class="@current('ladders/*/matches') border-primary @else border-secondary-light @endcurrent hover:border-primary py-4 px-4 border-b-2 text-center border-green-500 flex-grow md:flex-grow-0">Matchs</li>
-            @role(['admin'])
-                <li class="@current('ladders/*/edit') border-primary @else border-secondary-light @endcurrent hover:border-primary py-4 px-4 border-b-2 text-center border-purple-500 flex-grow md:flex-grow-0">Editer</li>
-            @endrole
-        </ul>
+        <div class="text-white flex items-stretch justify-between md:justify-start mb-6 overflow-auto md:w-2/3 md:mx-auto">
+            <a href="{{ route('ladder.ranking', $ladder) }}" class="border-primary hover:border-primary py-4 px-4 border-b-2 text-center flex-grow md:flex-grow-0">Classement</a>
+            <a href="{{ route('game.index', $ladder) }}" class="border-secondary-light hover:border-primary py-4 px-4 border-b-2 text-center border-green-500 flex-grow md:flex-grow-0">Matchs</a>
+            @can('update', $ladder)
+                <a href="{{ route('ladder.edit', $ladder) }}" class="border-secondary-light hover:border-primary py-4 px-4 border-b-2 text-center border-purple-500 flex-grow md:flex-grow-0">Éditer</a>
+            @endcan
+        </div>
     </div>
     <div class="grid grid-cols-1 md:w-2/3 md:mx-auto text-white">
         @foreach($teams as $team)
