@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Game;
 use App\Models\User;
 use Tests\TestCase;
 use App\Models\Team;
@@ -39,6 +40,11 @@ class GameControllerTest extends TestCase
         $response->assertRedirect('/ladders/' . $ladder->id . '/ranking');
 
         $this->assertDatabaseCount('games', 1);
+
+        $game = Game::first();
+
+        $this->assertEquals($ladder->id, $game->ladder->id);
+
         $this->assertDatabaseHas('game_team', [
             'team_id' => $teams->first()->id,
             'score' => 3,
@@ -102,7 +108,7 @@ class GameControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_list_games()
+    public function guest_can_list_games()
     {
         $ladder = Ladder::factory()->create();
         $ladder->teams()->saveMany(
@@ -111,31 +117,11 @@ class GameControllerTest extends TestCase
             ])
         );
 
-        $this->makeAGame($winner, $looser);
+        $this->makeAGame($ladder, $winner, $looser);
 
-        $admin = User::factory()->create([
-            'role' => 'admin'
-        ]);
-
-        $response = $this->actingAs($admin)->get('/games');
+        $response = $this->get('/ladders/' . $ladder->id . '/games');
         $response->assertSuccessful();
         $this->assertCount(1, $response['games']);
-    }
-
-    /** @test */
-    public function member_cant_list_games()
-    {
-        $member = User::factory()->create();
-
-        $response = $this->actingAs($member)->get('/games');
-        $response->assertForbidden();
-    }
-
-    /** @test */
-    public function guest_cant_list_games()
-    {
-        $response = $this->get('/games');
-        $response->assertRedirect('/login');
     }
 
     /** @test */
@@ -148,14 +134,14 @@ class GameControllerTest extends TestCase
             ])
         );
 
-        $game = $this->makeAGame($winner, $looser);
+        $game = $this->makeAGame($ladder, $winner, $looser);
 
         $admin = User::factory()->create([
             'role' => 'admin'
         ]);
 
-        $response = $this->actingAs($admin)->delete('/games/' . $game->id);
-        $response->assertRedirect('/games');
+        $response = $this->actingAs($admin)->delete('/ladders/' . $ladder->id . '/games/' . $game->id);
+        $response->assertRedirect('/ladders/' . $ladder->id . '/games');
 
         $this->assertDatabaseMissing('games', [
             'id' => $game->id,
@@ -173,7 +159,7 @@ class GameControllerTest extends TestCase
     }
 
     /** @test */
-    public function member_cant_delete_game()
+    public function member_who_played_can_delete_game()
     {
         $ladder = Ladder::factory()->create();
         $ladder->teams()->saveMany(
@@ -182,11 +168,48 @@ class GameControllerTest extends TestCase
             ])
         );
 
-        $game = $this->makeAGame($winner, $looser);
+        $game = $this->makeAGame($ladder, $winner, $looser);
         $member = User::factory()->create();
 
-        $response = $this->actingAs($member)->delete('/games/' . $game->id);
+        $member->teams()->attach($winner);
+
+        $response = $this->actingAs($member)->delete('/ladders/' . $ladder->id . '/games/' . $game->id);
+        $response->assertRedirect('/ladders/' . $ladder->id . '/games');
+
+        $this->assertDatabaseMissing('games', [
+            'id' => $game->id,
+        ]);
+
+        $this->assertDatabaseHas('teams', [
+            'id' => $winner->id,
+            'elo' => 500,
+        ]);
+
+        $this->assertDatabaseHas('teams', [
+            'id' => $looser->id,
+            'elo' => 500,
+        ]);
+    }
+
+    /** @test */
+    public function member_who_has_not_played_cant_delete_game()
+    {
+        $ladder = Ladder::factory()->create();
+        $ladder->teams()->saveMany(
+            list($winner, $looser) = Team::factory(2)->make([
+                'elo' => 500,
+            ])
+        );
+
+        $game = $this->makeAGame($ladder, $winner, $looser);
+        $member = User::factory()->create();
+
+        $response = $this->actingAs($member)->delete('/ladders/' . $ladder->id . '/games/' . $game->id);
         $response->assertForbidden();
+
+        $this->assertDatabaseHas('games', [
+            'id' => $game->id,
+        ]);
     }
 
     /** @test */
@@ -199,9 +222,9 @@ class GameControllerTest extends TestCase
             ])
         );
 
-        $game = $this->makeAGame($winner, $looser);
+        $game = $this->makeAGame($ladder, $winner, $looser);
 
-        $response = $this->delete('/games/' . $game->id);
+        $response = $this->delete('/ladders/' . $ladder->id . '/games/' . $game->id);
         $response->assertRedirect('/login');
     }
 }

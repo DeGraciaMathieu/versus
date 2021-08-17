@@ -44,16 +44,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class);
     }
 
-    public function hasRole(string $role): bool
-    {
-        return $this->hasOneOfTheseRole([$role]);
-    }
-
-    public function hasOneOfTheseRole(array $roles): bool
-    {
-        return in_array($this->role, $roles, true);
-    }
-
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Game extends Model
@@ -18,6 +19,11 @@ class Game extends Model
     protected $fillable = [
         'status', 'processed_at',
     ];
+
+    public function ladder(): BelongsTo
+    {
+        return $this->belongsTo(Ladder::class);
+    }
 
     public function teams(): BelongsToMany
     {

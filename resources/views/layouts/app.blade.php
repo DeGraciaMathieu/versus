@@ -43,14 +43,6 @@
                             </svg>
                             Ladders
                         </a>
-                        @role(['admin'])
-                            <a href="{{ route('game.index') }}" class="block py-4 pl-4 flex items-center md:inline-block md:mt-0 hover:text-primary">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                                </svg>
-                                Matchs
-                            </a>
-                        @endrole
                         @auth
                             <a href="#" class="block py-4 pl-4 flex items-center md:inline-block md:mt-0 hover:text-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">

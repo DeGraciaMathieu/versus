@@ -12,13 +12,11 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function index()
+    public function index(Ladder $ladder)
     {
-        $games = Game::with('teams.ladder')
-            ->orderByDesc('created_at')
-            ->get();
+        $games = $ladder->games()->orderByDesc('created_at')->get();
 
-        return view('game.index', ['games' => $games]);
+        return view('game.index', ['ladder' => $ladder, 'games' => $games]);
     }
 
     public function create(Request $request, Ladder $ladder)
@@ -43,9 +41,11 @@ class GameController extends Controller
         $firstTeam = $ladder->teams->where('id', '=', $request->get('home_id'))->first();
         $secondTeam = $ladder->teams->where('id', '=', $request->get('away_id'))->first();
 
-        $game = Game::create([
+        $game = Game::make([
             'processed_at' => now(),
         ]);
+
+        $ladder->games()->save($game);
 
         $game->teams()->save($firstTeam, ['score' => $request->get('home_score')]);
         $game->teams()->save($secondTeam, ['score' => $request->get('away_score')]);
@@ -55,7 +55,7 @@ class GameController extends Controller
         return redirect()->route('ladder.ranking', $ladder);
     }
 
-    public function destroy(Game $game)
+    public function destroy(Ladder $ladder, Game $game)
     {
         $game->teams->each(function (Team $team) {
             $team->elo -= $team->pivot->elo_diff;
@@ -67,6 +67,6 @@ class GameController extends Controller
 
         $game->delete();
 
-        return redirect()->route('game.index');
+        return redirect()->route('game.index', $ladder);
     }
 }

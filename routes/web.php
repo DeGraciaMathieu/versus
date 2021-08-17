@@ -33,25 +33,36 @@ Route::post('/register', [\App\Http\Controllers\Auth\RegisteredUserController::c
 
 Route::get('/', [\App\Http\Controllers\LadderController::class, 'index'])->name('ladder.index');
 Route::get('/ladders/{ladder}/ranking', [\App\Http\Controllers\LadderController::class, 'ranking'])->name('ladder.ranking');
+Route::get('/ladders/{ladder}/games', [\App\Http\Controllers\GameController::class, 'index'])->name('game.index');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/ladders/{ladder}/teams/create', [\App\Http\Controllers\TeamController::class, 'create'])->name('team.create');
     Route::post('ladders/{ladder}/teams', [\App\Http\Controllers\TeamController::class, 'store'])->name('team.store');
 
-    Route::group(['middleware' => 'team.registred'], function () {
+    Route::group(['middleware' => 'team.registered'], function () {
         Route::get('ladders/{ladder}/games/create', [\App\Http\Controllers\GameController::class, 'create'])->name('game.create');
         Route::post('ladders/{ladder}/games', [\App\Http\Controllers\GameController::class, 'store'])->name('game.store');
     });
 
-    Route::group(['middleware' => 'has.role:admin'], function () {
-        Route::get('ladders/create', [\App\Http\Controllers\LadderController::class, 'create'])->name('ladder.create');
-        Route::post('ladders', [\App\Http\Controllers\LadderController::class, 'store'])->name('ladder.store');
-        Route::get('ladders/{ladder}/edit', [\App\Http\Controllers\LadderController::class, 'edit'])->name('ladder.edit');
-        Route::put('ladders/{ladder}', [\App\Http\Controllers\LadderController::class, 'update'])->name('ladder.update');
+    Route::delete('ladders/{ladder}/games/{game}', [\App\Http\Controllers\GameController::class, 'destroy'])
+        ->name('game.destroy')
+        ->middleware('can:delete,game');
 
-        Route::get('games', [\App\Http\Controllers\GameController::class, 'index'])->name('game.index');
-        Route::delete('games/{game}', [\App\Http\Controllers\GameController::class, 'destroy'])->name('game.destroy');
-    });
+    Route::get('ladders/create', [\App\Http\Controllers\LadderController::class, 'create'])
+        ->name('ladder.create')
+        ->middleware('can:create,App\Models\Ladder');
+
+    Route::post('ladders', [\App\Http\Controllers\LadderController::class, 'store'])
+        ->name('ladder.store')
+        ->middleware('can:create,App\Models\Ladder');
+
+    Route::get('ladders/{ladder}/edit', [\App\Http\Controllers\LadderController::class, 'edit'])
+        ->name('ladder.edit')
+        ->middleware('can:update,ladder');
+
+    Route::put('ladders/{ladder}', [\App\Http\Controllers\LadderController::class, 'update'])
+        ->name('ladder.update')
+        ->middleware('can:update,ladder');
 });
 
 Route::get('images/{image}', [\App\Http\Controllers\ImageController::class, 'show'])

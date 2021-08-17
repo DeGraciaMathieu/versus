@@ -11,20 +11,14 @@ class UserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function has_role()
+    public function is_admin()
     {
-        $author = User::factory()->create(['role' => 'member']);
+        $admin = User::factory()->create(['role' => 'admin']);
 
-        $this->assertTrue($author->hasRole('member'));
-    }
+        $this->assertTrue($admin->isAdmin());
 
-    /** @test */
-    public function has_one_of_the_roles()
-    {
-        $user = User::factory()->create(['role' => 'user']);
+        $member = User::factory()->create(['role' => 'member']);
 
-        $this->assertFalse($user->hasOneOfTheseRole(['admin']));
-        $this->assertTrue($user->hasOneOfTheseRole(['user']));
-        $this->assertTrue($user->hasOneOfTheseRole(['user', 'admin']));
+        $this->assertFalse($member->isAdmin());
     }
 }
