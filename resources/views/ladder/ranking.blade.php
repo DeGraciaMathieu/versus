@@ -27,8 +27,8 @@
     </div>
     <div class="grid grid-cols-1 md:w-2/3 md:mx-auto text-white">
         @foreach($teams as $team)
-            <div class="flex flex-row mb-6 border-b border-primary">
-                <div class="bg-primary text-2xl h-16 w-16 font-logo flex items-center justify-center">
+            <div class="flex flex-row mb-6 border-b {{ $team->current ? 'border-white' : 'border-primary' }}">
+                <div class="{{ $team->current ? 'bg-white text-primary' : 'bg-primary' }} text-2xl h-16 w-16 font-logo flex items-center justify-center">
                     {{ $team->rank }}
                 </div>
                 <div class="flex-grow self-center w-4/6 pl-3 py-2">
