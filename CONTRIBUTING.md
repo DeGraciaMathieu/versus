@@ -32,3 +32,9 @@ docker-compose exec app yarn run dev
 Voici le schéma de la base de donnée :
 
 ![dbdiagram](https://github.com/noobgamecontest/versus/blob/master/art/dbdiagram.png)
+
+## Gitflow
+
+Voici comment les branches sont gérées :
+
+![gitflow](https://github.com/noobgamecontest/versus/blob/master/art/gitflow.png)
