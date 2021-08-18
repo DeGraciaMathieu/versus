@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLadderRequest;
 use App\Http\Requests\UpdateLadderRequest;
-use App\Models\Image;
 use App\Models\Ladder;
+use App\Models\Team;
 use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,6 +30,12 @@ class LadderController extends Controller
     public function ranking(Request $request, Ladder $ladder): Response
     {
         $teams = $ladder->teams()->orderBy('elo', 'desc')->get();
+
+        $teams->each(function (Team $team) {
+           $team->load(['games' => function ($query) {
+               $query->orderByDesc('processed_at')->limit(3);
+           }]);
+        });
 
         $currentUserTeamId = null;
 
