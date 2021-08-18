@@ -27,17 +27,26 @@
     </div>
     <div class="grid grid-cols-1 md:w-2/3 md:mx-auto text-white">
         @foreach($teams as $team)
-            <div class="flex items-center mb-6 border-b border-primary">
+            <div class="flex flex-row mb-6 border-b border-primary">
                 <div class="bg-primary text-2xl h-16 w-16 font-logo flex items-center justify-center">
                     {{ $team->rank }}
                 </div>
-                <div class="self-center w-4/6 pl-3 py-2">
+                <div class="flex-grow self-center w-4/6 pl-3 py-2">
                     <div>
                         {{ $team->name }}
                     </div>
                     <div class="text-sm text-gray-500">
                         {{ $team->elo }} pts
                     </div>
+                </div>
+                <div class="flex flex-row items-center justify-end space-x-1">
+                    @foreach($team->games->reverse() as $game)
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 {{ 'text-' . ($game->pivot->won ? 'green' : 'red') . '-500'  }}" fill="currentColor" viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8"/>
+                            </svg>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         @endforeach
