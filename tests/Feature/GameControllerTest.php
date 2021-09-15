@@ -121,7 +121,7 @@ class GameControllerTest extends TestCase
 
         $response = $this->get('/ladders/' . $ladder->id . '/games');
         $response->assertSuccessful();
-        $this->assertCount(1, $response['games']);
+        $this->assertCount(1, $response['gamesGroupByDates']);
     }
 
     /** @test */

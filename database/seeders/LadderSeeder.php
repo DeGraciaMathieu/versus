@@ -30,9 +30,7 @@ class LadderSeeder extends Seeder
                     $opponents = $teams->where('id', '!=', $team->id)->random($max - 1);
 
                     $opponents->each(function ($opponent) use ($team, $ladder) {
-                        $game = Game::make([
-                            'processed_at' => now(),
-                        ]);
+                        $game = Game::factory()->make();
 
                         $ladder->games()->save($game);
 

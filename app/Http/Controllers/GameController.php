@@ -14,9 +14,11 @@ class GameController extends Controller
 {
     public function index(Ladder $ladder)
     {
-        $games = $ladder->games()->orderByDesc('created_at')->get();
+        $gamesGroupByDates = $ladder->games()->orderByDesc('processed_at')->get()->groupBy(function (Game $game) {
+            return $game->processed_at->format('Y-m-d');
+        });
 
-        return view('game.index', ['ladder' => $ladder, 'games' => $games]);
+        return view('game.index', ['ladder' => $ladder, 'gamesGroupByDates' => $gamesGroupByDates]);
     }
 
     public function create(Request $request, Ladder $ladder)

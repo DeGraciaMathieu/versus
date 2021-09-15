@@ -20,6 +20,10 @@ class Game extends Model
         'status', 'processed_at',
     ];
 
+    protected $dates = [
+        'processed_at',
+    ];
+
     public function ladder(): BelongsTo
     {
         return $this->belongsTo(Ladder::class);
