@@ -21,13 +21,13 @@
                 </div>
                 @foreach($games as $game)
                     <div class="flex justify-between mb-4 items-center">
-                        <div class="text-right text-xs font-bold flex-grow w-1/4 mr-4">{{ $game->teams->first()->name }}</div>
-                        <div class="bg-white text-secondary p-2">
+                        <div class="text-right text-xs font-bold flex-grow w-1/3 mr-4">{{ $game->teams->first()->name }}</div>
+                        <div class="bg-white text-secondary text-center w-1/5 md:w-1/12 p-2">
                             {{ $game->teams->first()->pivot->score }} - {{ $game->teams->last()->pivot->score }}
                         </div>
-                        <div class="text-left text-xs font-bold flex-grow w-1/4 ml-4">{{ $game->teams->last()->name }}</div>
-                        <div class="py-4 px-4 text-left flex items-center justify-end">
-                            @can('delete', $game)
+                        <div class="text-left text-xs font-bold flex-grow w-1/3 ml-4">{{ $game->teams->last()->name }}</div>
+                        @can('delete', $game)
+                            <div class="py-4 px-4 text-left flex items-center justify-end">
                                 <form method="POST" action="{{ route('game.destroy', [$ladder, $game]) }}" class="flex">
                                     @method('delete')
                                     @csrf
@@ -38,8 +38,8 @@
                                         </svg>
                                     </x-link>
                                 </form>
-                            @endcan
-                        </div>
+                            </div>
+                        @endcan
                     </div>
                 @endforeach
             </div>
