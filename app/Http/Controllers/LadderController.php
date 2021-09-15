@@ -29,7 +29,11 @@ class LadderController extends Controller
 
     public function ranking(Request $request, Ladder $ladder): Response
     {
-        $teams = $ladder->teams()->orderBy('elo', 'desc')->get();
+        $teams = $ladder
+            ->teams()
+            ->whereHas('games')
+            ->orderBy('elo', 'desc')
+            ->get();
 
         $teams->each(function (Team $team) {
            $team->load(['games' => function ($query) {
