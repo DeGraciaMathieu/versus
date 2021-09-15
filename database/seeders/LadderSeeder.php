@@ -34,8 +34,8 @@ class LadderSeeder extends Seeder
 
                         $ladder->games()->save($game);
 
-                        $teamScore = 11;
-                        $opponentScore = rand(0, 9);
+                        $teamScore = rand(0, 20);
+                        $opponentScore = rand(0, 20);
 
                         $game->teams()->save($team, ['score' => $teamScore]);
                         $game->teams()->save($opponent, ['score' => $opponentScore]);
