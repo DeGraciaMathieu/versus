@@ -25,7 +25,7 @@
             <tbody>
                 @foreach($games as $game)
                     <tr class="bg-secondary-light border-b border-secondary-dark">
-                        <td class="py-4 px-4 text-left">{{ $game->created_at->format('d/m/Y H:i') }}</td>
+                        <td class="py-4 px-4 text-left">{{ $game->created_at->format('d/m/Y') }}</td>
                         <td class="py-4 px-2 text-right">{{ $game->teams->first()->name }}</td>
                         <td class="py-4 px-2 text-center">
                             {{ $game->teams->first()->pivot->score }} - {{ $game->teams->last()->pivot->score }}
