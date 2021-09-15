@@ -23,7 +23,7 @@ class GameFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'processed_at' => $this->faker->dateTimeBetween('-5 days'),
         ];
     }
 }

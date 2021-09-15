@@ -14,24 +14,19 @@
         </div>
     </div>
     <div class="overflow-auto">
-        <table class="text-white w-full md:w-2/3 md:mx-auto whitespace-nowrap border-collapse">
-            <thead>
-                <tr class="bg-secondary-dark uppercase text-xs">
-                    <th class="py-2 px-4 text-left">Date</th>
-                    <th class="py-2 px-4 text-center" colspan="3">Score</th>
-                    <th class="py-2 px-4 text-center">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
+        @foreach($gamesGroupByDates as $date => $games)
+            <div class="text-white w-full md:w-2/3 md:mx-auto">
+                <div class="pl-4 py-1 text-xs bg-secondary-light mb-4">
+                    {{ \Carbon\Carbon::make($date)->translatedFormat('l j F') }}
+                </div>
                 @foreach($games as $game)
-                    <tr class="bg-secondary-light border-b border-secondary-dark">
-                        <td class="py-4 px-4 text-left">{{ $game->created_at->format('d/m/Y') }}</td>
-                        <td class="py-4 px-2 text-right">{{ $game->teams->first()->name }}</td>
-                        <td class="py-4 px-2 text-center">
+                    <div class="flex justify-between mb-4 items-center">
+                        <div class="text-right text-xs font-bold flex-grow w-1/4 mr-4">{{ $game->teams->first()->name }}</div>
+                        <div class="bg-white text-secondary p-2">
                             {{ $game->teams->first()->pivot->score }} - {{ $game->teams->last()->pivot->score }}
-                        </td>
-                        <td class="py-4 px-2 text-left">{{ $game->teams->last()->name }}</td>
-                        <td class="py-4 px-4 text-left flex items-center justify-end">
+                        </div>
+                        <div class="text-left text-xs font-bold flex-grow w-1/4 ml-4">{{ $game->teams->last()->name }}</div>
+                        <div class="py-4 px-4 text-left flex items-center justify-end">
                             @can('delete', $game)
                                 <form method="POST" action="{{ route('game.destroy', [$ladder, $game]) }}" class="flex">
                                     @method('delete')
@@ -44,10 +39,11 @@
                                     </x-link>
                                 </form>
                             @endcan
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                 @endforeach
-            </tbody>
-        </table>
+            </div>
+        @endforeach
     </div>
 @endsection
+
