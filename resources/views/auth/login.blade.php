@@ -4,7 +4,7 @@
     <h1 class="font-bold text-3xl text-white mt-8 mb-4 md:w-2/3 md:mx-auto">
         Authentification
     </h1>
-    <div class="text-white text-sm text-center mt-8 md:w-2/3 md:mx-auto bg-secondary-dark py-4 mb-8">
+    <div class="text-white text-sm text-center mt-8 md:w-2/3 md:mx-auto bg-secondary-dark py-4 px-2 mb-8">
         Tu n'as pas de compte ? <a href="{{ route('register') }}" class="underline hover:text-primary">Inscris toi !</a>
     </div>
     <form action="{{ route('login') }}" method="post" class="md:w-2/3 md:mx-auto text-white font-bold">
@@ -29,8 +29,8 @@
             Se connecter
         </x-button>
 
-{{--        <div class="mt-4 text-center">--}}
-{{--            <a href="#" class="text-sm underline hover:text-primary">Mot de passe oublié ?</a>--}}
-{{--        </div>--}}
+        <div class="mt-4 text-center">
+            <a href="{{ route('password.request') }}" class="text-sm underline hover:text-primary">Mot de passe oublié ?</a>
+        </div>
     </form>
 @endsection
