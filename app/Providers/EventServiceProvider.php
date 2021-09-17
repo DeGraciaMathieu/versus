@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Events\GamePlayed;
+use App\Events\UserSaved;
+use App\Listeners\UpdateUserSingleTeams;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\ResolveEloAfterGame;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         GamePlayed::class => [
             ResolveEloAfterGame::class,
+        ],
+        UserSaved::class => [
+            UpdateUserSingleTeams::class,
         ],
     ];
 
