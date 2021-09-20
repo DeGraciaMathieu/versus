@@ -63,6 +63,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('ladders/{ladder}', [\App\Http\Controllers\LadderController::class, 'update'])
         ->name('ladder.update')
         ->middleware('can:update,ladder');
+
+    Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])
+        ->name('user.index')
+        ->middleware('can:viewAny,App\Models\User');
+
+    Route::get('users/{user}/edit', [\App\Http\Controllers\UserController::class, 'edit'])
+        ->name('user.edit')
+        ->middleware('can:update,user');
+
+    Route::put('users/{user}', [\App\Http\Controllers\UserController::class, 'update'])
+        ->name('user.update')
+        ->middleware('can:update,user');
+
+    Route::get('home/settings', [\App\Http\Controllers\HomeController::class, 'settings'])
+        ->name('home.settings');
+
+    Route::put('home/settings', [\App\Http\Controllers\HomeController::class, 'updateSettings'])
+        ->name('home.updateSettings');
 });
 
 Route::get('images/{image}', [\App\Http\Controllers\ImageController::class, 'show'])

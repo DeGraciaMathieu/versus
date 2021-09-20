@@ -21,4 +21,20 @@ class UserTest extends TestCase
 
         $this->assertFalse($member->isAdmin());
     }
+
+    /** @test */
+    public function get_custom_photo()
+    {
+        $user = User::factory()->create(['photo' => 'my-custom-photo']);
+
+        $this->assertEquals('my-custom-photo', $user->getPhoto());
+    }
+
+    /** @test */
+    public function get_default_photo()
+    {
+        $user = User::factory()->create(['photo' => null]);
+
+        $this->assertEquals(User::DEFAULT_PHOTO, $user->getPhoto());
+    }
 }
