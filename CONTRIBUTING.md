@@ -25,6 +25,9 @@ docker-compose exec app composer up
 # Construction des assets
 docker-compose exec app yarn install
 docker-compose exec app yarn run dev
+
+# Remise à zero de l'application (bdd, seeds ...)
+docker-compose exec make fresh
 ```
 
 ## Schéma de la base de donnée
